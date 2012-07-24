@@ -1,0 +1,4 @@
+# This file exists in order to preserve the /data/js/ directory, which 
+# copyDeps.sh needs.
+
+# See: http://stackoverflow.com/questions/115983/how-do-i-add-an-empty-directory-to-a-git-repository
