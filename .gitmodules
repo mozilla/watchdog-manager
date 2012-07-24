@@ -1,0 +1,9 @@
+[submodule "dependencies/zxcvbn"]
+	path = dependencies/zxcvbn
+	url = git://github.com/lowe/zxcvbn.git
+[submodule "dependencies/watchdog-visualize-passwords"]
+	path = dependencies/watchdog-visualize-passwords
+	url = git://github.com/mozilla/watchdog-visualize-passwords.git
+[submodule "dependencies/bootstrap"]
+	path = dependencies/bootstrap
+	url = git://github.com/twitter/bootstrap.git
