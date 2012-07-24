@@ -5,18 +5,22 @@ function strengthHTML(password) {
     var STAR_FILLED = '&#9733;',
         STAR_EMPTY  = '&#9734;';
 
-    var score = zxcvbn(password).score;
+    var strength = zxcvbn(password);
+    var score = strength.score;
 
-    var html = '';
+    var stars = '';
     var i;
 
     for(i = 0; i < score; i++) {
-        html += STAR_FILLED;
+        stars += STAR_FILLED;
     }
 
     for(i = score; i < 4; i++) {
-        html += STAR_EMPTY;
+        stars += STAR_EMPTY;
     }
+
+    var html = '<span title="Crack time ' + strength.crack_time_display +
+        '">' + stars + '</span>';
 
     return html;
 }
