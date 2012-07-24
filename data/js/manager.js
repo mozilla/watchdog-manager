@@ -30,7 +30,7 @@ function credentialHTML(credential) {
         credential.site + '</td><td>' +
         credential.username + '</td><td>' +
         '<img src="' + getDataURLForHash(SHA1(credential.password),70,25) + '"/>' + '</td><td>' +
-        credential.age + '</td><td>' +
+        ageString(credential.lastChanged) + '</td><td>' +
         strengthHTML(credential.password) + '</td><td>' +
         '<input type="button" value="Change"></td>' +
         '</tr>';
