@@ -1,3 +1,4 @@
+(function() {
 var MINUTES = 1000 * 60;
 var HOURS = 60 * MINUTES;
 var DAYS = 24 * HOURS;
@@ -33,7 +34,7 @@ function years(milliseconds) {
  * Given a timestamp in milliseconds, returns a human-readable string, saying
  * how long ago this was.
  * */
-exports.ageString = function(timestamp) {
+window.ageString = function(timestamp) {
     var age = Date.now() - timestamp;
 
     if(age < 0) {
@@ -55,3 +56,5 @@ exports.ageString = function(timestamp) {
         return years(age) + ' years';
     }
 }
+
+})();
