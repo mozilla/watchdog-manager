@@ -1,1 +1,2 @@
-data/lib
+data/lib/visualhashing_util.js
+data/lib/zxcvbn.js
