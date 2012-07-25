@@ -28,7 +28,6 @@ function strengthHTML(password) {
 
     return html;
 }
->>>>>>> fd259745c6fa9b5eff527d7ed73c9da62badea5b
 
 function credentialHTML(credential) {
     return '<tr><td>' + (++count) + '</td><td>' +
