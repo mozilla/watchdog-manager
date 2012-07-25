@@ -34,7 +34,7 @@ function credentialHTML(credential) {
         credential.site + '</td><td>' +
         credential.username + '</td><td>' +
         SHA1(credential.password) + '</td><td>' +
-        ageString(credential.lastChanged) + '</td><td>' +
+        credential.lastChanged + '</td><td>' +
         strengthHTML(credential.password) + '</td><td>' +
         '<input type="button" value="Change"></td>' +
         '</tr>';
@@ -46,12 +46,25 @@ function addCredentials(credentials) {
     });
     $('#password-table').dataTable({
         'aoColumnDefs': [
+			// Render password hash as a visual hash
             {
                 'fnRender': function(obj, val) {
                     return '<img src="' + getDataURLForHash(val,70,25) + '"/>';
                 },
+				// Use actual data (before fnRender) to sort column
+				'bUseRendered': false,
                 'aTargets': [3]
+            },
+			// Render password age as a human-readable age string
+            {
+                'fnRender': function(obj, val) {
+                    return ageString(val);
+                },
+				// Use actual data (before fnRender) to sort column
+				'bUseRendered': false,
+                'aTargets': [4]
             }
+			
         ]
     });
 }
