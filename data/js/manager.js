@@ -46,25 +46,25 @@ function addCredentials(credentials) {
     });
     $('#password-table').dataTable({
         'aoColumnDefs': [
-			// Render password hash as a visual hash
+            // Render password hash as a visual hash
             {
                 'fnRender': function(obj, val) {
                     return '<img src="' + getDataURLForHash(val,70,25) + '"/>';
                 },
-				// Use actual data (before fnRender) to sort column
-				'bUseRendered': false,
+                // Use actual data (before fnRender) to sort column
+                'bUseRendered': false,
                 'aTargets': [3]
             },
-			// Render password age as a human-readable age string
+            // Render password age as a human-readable age string
             {
                 'fnRender': function(obj, val) {
                     return ageString(val);
                 },
-				// Use actual data (before fnRender) to sort column
-				'bUseRendered': false,
+                // Use actual data (before fnRender) to sort column
+                'bUseRendered': false,
                 'aTargets': [4]
             }
-			
+            
         ]
     });
 }
