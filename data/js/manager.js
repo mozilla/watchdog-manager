@@ -1,7 +1,7 @@
 var count = 0;
 
 $(document).ready(function(){
-	getCredentials();
+    getCredentials();
 });
 
 /** Given a password, returns a visual representation of its strength */
@@ -41,17 +41,17 @@ function credentialHTML(credential) {
 }
 
 function addCredentials(credentials) {
-	credentials.forEach(function(credential) {
-	    $('#password-table tbody').append($(credentialHTML(credential)));
-	});
-	$('#password-table').dataTable({
-		'aoColumnDefs': [
-			{
-				'fnRender': function(obj, val) {
-					return '<img src="' + getDataURLForHash(val,70,25) + '"/>';
-				},
-				'aTargets': [3]
-			}
-		]
-	});
+    credentials.forEach(function(credential) {
+        $('#password-table tbody').append($(credentialHTML(credential)));
+    });
+    $('#password-table').dataTable({
+        'aoColumnDefs': [
+            {
+                'fnRender': function(obj, val) {
+                    return '<img src="' + getDataURLForHash(val,70,25) + '"/>';
+                },
+                'aTargets': [3]
+            }
+        ]
+    });
 }
