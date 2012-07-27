@@ -2,6 +2,7 @@ var count = 0;
 
 $(document).ready(function(){
     getCredentials();
+    setupUI();
 });
 
 /** Given a password, returns a visual representation of its strength */
@@ -30,13 +31,13 @@ function strengthHTML(password) {
 }
 
 function credentialHTML(credential) {
-    return '<tr><td>' + (++count) + '</td><td>' +
-        credential.site + '</td><td>' +
-        credential.username + '</td><td>' +
-        SHA1(credential.password) + '</td><td>' +
+    return '<tr><td>' + (++count) + '</td><td class="table-site">' +
+        credential.site + '</td><td class="table-username">' +
+        credential.username + '</td><td class="table-password">' +
+        credential.password + '</td><td>' +
         credential.lastChanged + '</td><td>' +
         strengthHTML(credential.password) + '</td><td>' +
-        '<input type="button" value="Change"></td>' +
+        (credential.can_automate ? '<input type="button" class="btnChangePassword" value="Change"></td>' : '</td>') +
         '</tr>';
 }
 
@@ -46,10 +47,10 @@ function addCredentials(credentials) {
     });
     $('#password-table').dataTable({
         'aoColumnDefs': [
-            // Render password hash as a visual hash
+            // Render password as a visual hash
             {
                 'fnRender': function(obj, val) {
-                    return '<img src="' + getDataURLForHash(val,70,25) + '"/>';
+                    return '<img src="' + getDataURLForHash(SHA1(val),70,25) + '"/>';
                 },
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
@@ -66,5 +67,18 @@ function addCredentials(credentials) {
             }
             
         ]
+    });
+}
+
+function setupUI() {
+    $(document.body).on('click','.btnChangePassword',function() {
+        runAutomationWorker('changePassword',
+            $(this).parentsUntil('tbody').find('.table-site').text(), // Site to change password on
+            {
+                username: $(this).parentsUntil('tbody').find('.table-username').text(), // Username for account
+                old_password: $(this).parentsUntil('tbody').find('.table-password').text(), // Username for account
+                new_password: 'blah'
+            }
+        );
     });
 }
