@@ -1,3 +1,4 @@
+var passwordTable;
 var count = 0;
 
 $(document).ready(function(){
@@ -36,8 +37,8 @@ function credentialHTML(credential) {
         credential.username + '</td><td class="table-password">' +
         credential.password + '</td><td>' +
         credential.lastChanged + '</td><td>' +
-        strengthHTML(credential.password) + '</td><td>' +
-        (credential.can_automate ? '<input type="button" class="btnChangePassword" value="Change"></td>' : '</td>') +
+        strengthHTML(credential.password) + '</td><td class="table-automate-button">' +
+        (credential.can_automate ? 'can_automate' : '')  + '</td>' +
         '</tr>';
 }
 
@@ -45,7 +46,7 @@ function addCredentials(credentials) {
     credentials.forEach(function(credential) {
         $('#password-table tbody').append($(credentialHTML(credential)));
     });
-    $('#password-table').dataTable({
+    passwordTable = $('#password-table').dataTable({
         'aoColumnDefs': [
             // Render password as a visual hash
             {
@@ -64,6 +65,26 @@ function addCredentials(credentials) {
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
                 'aTargets': [4]
+            },
+            // Render automate column as a button, if automation is available for the site.
+            // Also includes logic for displaying automation result
+            {
+                'fnRender': function(obj, val) {
+                    if (val == 'can_automate')
+                        return '<input type="button" class="btnChangePassword" value="Change">';
+                    else if (val == 'success')
+                        return '<span class="success">Success!</span>';
+                    else if (val == 'failure')
+                        return '<span class="failure">Failure!</span>';
+                    else if (val == 'waiting')
+                        return '<img src="img/spinner.gif"/>';
+                    
+                        
+                    return '';
+                },
+                // Use actual data (before fnRender) to sort column
+                'bUseRendered': false,
+                'aTargets': [6]
             }
             
         ]
@@ -72,12 +93,34 @@ function addCredentials(credentials) {
 
 function setupUI() {
     $(document.body).on('click','.btnChangePassword',function() {
+        var thisParentTR = $(this).closest('tr').get()[0];
+        
+        // Password for account
+        var currentPassword = passwordTable.fnGetData($(thisParentTR).find('.table-password').get()[0]);
+        
+        // Username for account
+        var username = passwordTable.fnGetData($(thisParentTR).find('.table-username').get()[0]);
+        
+        // Site to change password on
+        var site = passwordTable.fnGetData($(thisParentTR).find('.table-site').get()[0]);
+        
+        // TODO: replace prompt with something that requires you to confirm a password, with a real password input,
+        // and has an option for password generation.
+        var newPassword = prompt('Enter your new password.');
+                
+        // Update table column 6 (automation button/status) with a spinner.
+        passwordTable.fnUpdate('waiting',thisParentTR,6);
+
         runAutomationWorker('changePassword',
-            $(this).parentsUntil('tbody').find('.table-site').text(), // Site to change password on
+            site,
             {
-                username: $(this).parentsUntil('tbody').find('.table-username').text(), // Username for account
-                old_password: $(this).parentsUntil('tbody').find('.table-password').text(), // Username for account
-                new_password: 'blah'
+                username: username,
+                old_password: currentPassword,
+                new_password: newPassword
+            },function() {
+                passwordTable.fnUpdate('success',thisParentTR,6);
+            },function() {
+                passwordTable.fnUpdate('failure',thisParentTR,6);
             }
         );
     });
