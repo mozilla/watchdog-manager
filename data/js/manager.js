@@ -5,11 +5,10 @@ $(document).ready(function(){
 });
 
 /** Given a password, returns a visual representation of its strength */
-function strengthHTML(password) {
+function strengthHTML(strength) {
     var STAR_FILLED = '&#9733;',
         STAR_EMPTY  = '&#9734;';
 
-    var strength = zxcvbn(password);
     var score = strength.score;
 
     var stars = '';
@@ -35,7 +34,7 @@ function credentialHTML(credential) {
         credential.username + '</td><td>' +
         SHA1(credential.password) + '</td><td>' +
         credential.lastChanged + '</td><td>' +
-        strengthHTML(credential.password) + '</td><td>' +
+        strengthHTML(credential.strength) + '</td><td>' +
         '<input type="button" value="Change"></td>' +
         '</tr>';
 }
