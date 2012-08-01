@@ -11,4 +11,9 @@ function addNotification() {
     document.getElementById('notifications').innerHTML = ++notificationCount;
 }
 
+function removeNotification() {
+    document.getElementById('notifications').innerHTML = --notificationCount;
+}
+
 self.port.on('notification', addNotification);
+self.port.on('removeNotification', removeNotification);
