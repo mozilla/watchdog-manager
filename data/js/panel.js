@@ -8,7 +8,7 @@ function addNotification(notification) {
     closeButton.onclick = function() {
         container.removeChild(item);
 
-        self.port.emit('removeNotification');
+        self.port.emit('removeNotification', notification);
     }
 
     item.innerHTML = notification + ' ';
