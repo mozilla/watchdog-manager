@@ -31,8 +31,6 @@ function strengthHTML(strength) {
 }
 
 function credentialHTML(credential) {
-    // console.log(strengthHTML(credential.password));
-    console.log(JSON.stringify(credential));
     return '<tr><td>' + (++count) + '</td><td class="table-site">' +
         credential.site + '</td><td class="table-username">' +
         credential.username + '</td><td class="table-password">' +
