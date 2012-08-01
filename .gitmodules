@@ -1,6 +1,6 @@
 [submodule "dependencies/zxcvbn"]
 	path = dependencies/zxcvbn
-	url = git://github.com/nmalkin/zxcvbn.git
+	url = git://github.com/lowe/zxcvbn.git
 [submodule "dependencies/watchdog-visualize-passwords"]
 	path = dependencies/watchdog-visualize-passwords
 	url = git://github.com/mozilla/watchdog-visualize-passwords.git
