@@ -1,2 +1,4 @@
 data/lib/visualhashing_util.js
 lib/lib/zxcvbn.js
+
+watchdog-manager.xpi
