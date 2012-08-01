@@ -7,11 +7,10 @@ $(document).ready(function(){
 });
 
 /** Given a password, returns a visual representation of its strength */
-function strengthHTML(password) {
+function strengthHTML(strength) {
     var STAR_FILLED = '&#9733;',
         STAR_EMPTY  = '&#9734;';
 
-    var strength = zxcvbn(password);
     var score = strength.score;
 
     var stars = '';
@@ -32,12 +31,14 @@ function strengthHTML(password) {
 }
 
 function credentialHTML(credential) {
+    // console.log(strengthHTML(credential.password));
+    console.log(JSON.stringify(credential));
     return '<tr><td>' + (++count) + '</td><td class="table-site">' +
         credential.site + '</td><td class="table-username">' +
         credential.username + '</td><td class="table-password">' +
         credential.password + '</td><td>' +
         credential.lastChanged + '</td><td>' +
-        strengthHTML(credential.password) + '</td><td class="table-automate-button">' +
+        strengthHTML(credential.strength) + '</td><td class="table-automate-button">' +
         (credential.can_automate ? 'can_automate' : '')  + '</td>' +
         '</tr>';
 }
