@@ -1,17 +1,15 @@
 AutomationHelpers = function() {
-    var callbackDict = {};
-    
+    // Maps worker names (as passed in to registerWorker) to worker functions
     var workerDict = {};
+    
+    // Dict of parameters that were passed to workers
     var workerParams = {};
     
+    // Worker ID, used to identify callbacks in chrome code
     var workerID;
     
     self.port.on("set_worker_id",function(msg) {
         workerID = msg.workerID;
-    });
-    
-    self.port.on("fetch_setting_callback", function(msg) {
-        getAndRmCallback(msg.callback_id)(msg.value);
     });
     
     self.port.on("set_params", function(msg) {
@@ -23,25 +21,6 @@ AutomationHelpers = function() {
             workerDict[msg.worker]();
     });
     
-    function saveCallback(callback) {
-        // Gen random UUID to associate with this callback
-        const randUUID = uuid.v4();
-        callbackDict[randUUID] = callback;
-        return randUUID;
-    }
-    
-    function getAndRmCallback(callbackID) {
-        var callback = callbackDict[callbackID];
-        delete callbackDict[callbackID];
-        return callback;
-    }
-    
-    // TODO
-    function callAndRmCallback(callbackID) {
-        var callbackFunc = getAndRmCallback(callbackID);
-        // callbackFunc.apply({},)
-    }
-    
     function postMessageForWorker(msg) {
         msg['worker_id'] = workerID;
         self.postMessage(msg);
@@ -52,6 +31,7 @@ AutomationHelpers = function() {
                 return workerParams;
             },
             openNewTab: function(url) {
+                // TODO
             },
             assert: function(assertion) {
                 if (!assertion) {
@@ -85,15 +65,6 @@ AutomationHelpers = function() {
                     }
                 }, pollInterval);
             },
-            forSetting: function(setting,callback) {
-
-                // TODO: self.port.emit?
-                postMessageForWorker({
-                    type: 'fetch_setting',
-                    setting_name: setting,
-                    callback_id: saveCallback(callback)
-                });
-            },
             finishAutomation: function(workerID) {
                 postMessageForWorker({
                     type: 'finish_automation',
@@ -115,11 +86,13 @@ AutomationHelpers = function() {
                 workerDict[id] = func;
             },
             returnValue: function(key,val) {
-                postMessageForWorker({
-                    type: 'return_value',
-                    key: key,
-                    value: val
-                });
+                // TODO: reimplement returnValue with param system.
+                
+                // postMessageForWorker({
+                //     type: 'return_value',
+                //     key: key,
+                //     value: val
+                // });
             },
             runWorker: function(id, url, visual) {
                 postMessageForWorker({
