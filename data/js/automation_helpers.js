@@ -76,9 +76,11 @@ AutomationHelpers = function() {
                 });
             },
             registerTask: function(name, func) {
-                workerDict[name] = func;
+                tasks[name] = func;
             },
-            registerWorker: registerTask, // for backwards-compatibility
+            registerWorker: function() {
+                this.registerTask.apply(this,arguments);
+            }, // for backwards-compatibility
             addTaskToQueue: function(taskName) {
                 postMessageForWorker({
                     type: 'addTask',
