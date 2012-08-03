@@ -1,32 +1,31 @@
 AutomationHelpers = function() {
-    // Maps worker names (as passed in to registerWorker) to worker functions
-    var workerDict = {};
+    // Maps task names (as passed in to registerTask) to worker functions
+    var tasks = {};
     
     // Dict of parameters that were passed to workers
     var workerParams = {};
     
-    // Worker ID, used to identify callbacks in chrome code
-    var workerID;
     
-    self.port.on("set_worker_id",function(msg) {
-        workerID = msg.workerID;
-    });
-    
-    self.port.on("set_params", function(msg) {
+    self.port.on("setParams", function(msg) {
         workerParams = msg.params;
     });
     
-    self.port.on("start_worker", function(msg) {
-        if (workerDict[msg.worker])
-            workerDict[msg.worker]();
+    self.port.on("startTask", function(task) {
+        if(task in tasks)
+            tasks[task]();
     });
     
     function postMessageForWorker(msg) {
-        msg['worker_id'] = workerID;
         self.postMessage(msg);
     }
-    
+
     return {
+            raiseEvent: function(event) {
+                postMessageForWorker({
+                    type: 'event',
+                    content: event
+                });
+            },
             getParams: function() {
                 return workerParams;
             },
@@ -65,10 +64,9 @@ AutomationHelpers = function() {
                     }
                 }, pollInterval);
             },
-            finishAutomation: function(workerID) {
+            finishAutomation: function() {
                 postMessageForWorker({
                     type: 'finish_automation',
-                    worker_id: workerID
                 });
             },
             registerError: function(error) {
@@ -77,13 +75,15 @@ AutomationHelpers = function() {
                     error: error
                 });
             },
-            registerWorker: function(id, func) {
+            registerTask: function(name, func) {
+                workerDict[name] = func;
+            },
+            registerWorker: registerTask, // for backwards-compatibility
+            addTaskToQueue: function(taskName) {
                 postMessageForWorker({
-                    type: 'register_worker',
-                    id: id,
-                    func: 'var __automate = ' + func.toString() + '; __automate();'
+                    type: 'addTask',
+                    content: taskName
                 });
-                workerDict[id] = func;
             },
             returnValue: function(key,val) {
                 // TODO: reimplement returnValue with param system.
@@ -93,14 +93,6 @@ AutomationHelpers = function() {
                 //     key: key,
                 //     value: val
                 // });
-            },
-            runWorker: function(id, url, visual) {
-                postMessageForWorker({
-                    type: 'run_worker',
-                    id: id,
-                    url: url,
-                    visual: visual
-                });
             },
             waitForReady: function(callback) {
                 $(unsafeWindow.document).bind('ready.watchdog', function() {
