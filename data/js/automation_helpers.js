@@ -1,4 +1,9 @@
 AutomationHelpers = function() {
+    var AssertionError = function(message) {
+        this.prototype = Error.prototype;
+        this.message = message;
+    };
+
     // Maps task names (as passed in to registerTask) to worker functions
     var tasks = {};
     
@@ -11,8 +16,18 @@ AutomationHelpers = function() {
     });
     
     self.port.on("startTask", function(task) {
-        if(task in tasks)
-            tasks[task]();
+        try {
+            if(task in tasks) {
+                tasks[task]();
+            }
+        } catch(e if e instanceof AssertionError) {
+            console.log('Assertion error');
+        } catch(e) {
+            postMessageForWorker({
+                type: 'raise_error',
+                error: e.message
+            });
+        }
     });
     
     function postMessageForWorker(msg) {
@@ -38,6 +53,8 @@ AutomationHelpers = function() {
                         type: 'raise_error',
                         error: 'assertion_failed'
                     });
+
+                    throw new AssertionError('assertion failed!');
                 }
                 return Boolean(assertion);
             },
