@@ -12,10 +12,10 @@ AutomationHelpers.registerWorker('changePassword', function() {
         $('#password_old').val(params['old_password']);
         $('#password_new').val(params['new_password']);
         $('#password_confirm').val(params['new_password']);
-    
+
         // Send a click event to enable the form submit
         $('input[type="password"]').click();
-        
+
         // Is the form enabled yet?
         return !$('.submit').hasClass('uiButtonDisabled');
     }, function() {
