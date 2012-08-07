@@ -29,5 +29,6 @@ AutomationHelpers.registerWorker('changePassword', function() {
 AutomationHelpers.registerWorker('verifyPasswordChange', function() {
     if (window.location == 'https://twitter.com/settings/passwords/password_reset_confirmation') {
         alert('Confirmed successful password change!');
+        AutomationHelpers.raiseEvent('success',{});
     }
 });

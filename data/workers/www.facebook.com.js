@@ -35,6 +35,6 @@ AutomationHelpers.registerWorker('changePassword', function() {
                     }
                 },300);
             });
-        },2000);
+        },1);
     });
 });

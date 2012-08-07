@@ -35,10 +35,13 @@ AutomationHelpers = function() {
     }
 
     return {
-            raiseEvent: function(event) {
+            raiseEvent: function(eventName,params) {
                 postMessageForWorker({
                     type: 'event',
-                    content: event
+                    content: {
+                        event_name: eventName,
+                        params: params
+                    }
                 });
             },
             getParams: function() {
