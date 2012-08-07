@@ -1,3 +1,5 @@
+"use strict";
+
 function addNotification(notification) {
     var container = document.getElementById('notifications');
 
@@ -9,7 +11,7 @@ function addNotification(notification) {
         container.removeChild(item);
 
         self.port.emit('removeNotification', notification);
-    }
+    };
 
     item.innerHTML = notification + ' ';
     item.appendChild(closeButton);

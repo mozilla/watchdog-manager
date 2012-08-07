@@ -16,7 +16,7 @@ self.port.on('failure', function(data) {
 
 unsafeWindow.getCredentials = function() {
     self.port.emit('get_credentials',{});
-}
+};
 
 unsafeWindow.runAutomationWorker = function(worker,site,params,successCallback,failureCallback) {
     self.port.emit('run_automation_worker', {
@@ -29,4 +29,4 @@ unsafeWindow.runAutomationWorker = function(worker,site,params,successCallback,f
         'success': successCallback,
         'failure': failureCallback
     };
-}
+};
