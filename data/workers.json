@@ -1,0 +1,10 @@
+{
+    "http://www.facebook.com": {
+        "url": "https://www.facebook.com/settings?tab=account&section=password",
+        "script": "www.facebook.com.js"
+    },
+    "http://t.nm.io": {
+        "url": "http://t.nm.io/password",
+        "script": "treehouse.nm.io.js"
+    }
+}
