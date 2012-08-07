@@ -1,0 +1,9 @@
+{
+    "browser": true,
+    "jquery": true,
+    "predef": [
+        "self",
+        "unsafeWindow",
+        "AutomationHelpers"
+    ]
+}
