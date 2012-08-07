@@ -1,4 +1,6 @@
 (function() {
+"use strict";
+
 var MINUTES = 1000 * 60;
 var HOURS = 60 * MINUTES;
 var DAYS = 24 * HOURS;
@@ -55,6 +57,6 @@ window.ageString = function(timestamp) {
     } else {
         return years(age) + ' years';
     }
-}
+};
 
 })();

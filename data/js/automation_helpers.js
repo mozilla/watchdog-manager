@@ -1,4 +1,6 @@
 AutomationHelpers = function() {
+    "use strict";
+
     var AssertionError = function(message) {
         this.prototype = Error.prototype;
         this.message = message;
