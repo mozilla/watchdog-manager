@@ -24,5 +24,6 @@ AutomationHelpers.registerTask('changePassword', function() {
 
 AutomationHelpers.registerTask('verifyChange', function() {
     AutomationHelpers.assert(window.location.href === 'http://t.nm.io/password');
+    AutomationHelpers.assert($(fields.current).length == 0);
     AutomationHelpers.finishAutomation();
 });
