@@ -1,3 +1,5 @@
+"use strict";
+
 var fields = {
     'current': 'input[name=current]',
     'next': 'input[name=new]',
@@ -8,9 +10,9 @@ AutomationHelpers.registerTask('changePassword', function() {
     var params = AutomationHelpers.getParams();
     
     // Assert that the form exists, and looks like we're used to.
-    AutomationHelpers.assert($(fields.current).length == 1);
-    AutomationHelpers.assert($(fields.next).length == 1);
-    AutomationHelpers.assert($(fields.verify).length == 1);
+    AutomationHelpers.assert($(fields.current).length === 1);
+    AutomationHelpers.assert($(fields.next).length === 1);
+    AutomationHelpers.assert($(fields.verify).length === 1);
 
     // Fill in the form
     $(fields.current).val(params['old_password']);
@@ -24,6 +26,6 @@ AutomationHelpers.registerTask('changePassword', function() {
 
 AutomationHelpers.registerTask('verifyChange', function() {
     AutomationHelpers.assert(window.location.href === 'http://t.nm.io/password');
-    AutomationHelpers.assert($(fields.current).length == 0);
+    AutomationHelpers.assert($(fields.current).length === 0);
     AutomationHelpers.finishAutomation();
 });
