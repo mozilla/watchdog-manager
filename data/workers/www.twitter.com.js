@@ -11,10 +11,24 @@ AutomationHelpers.registerWorker('changePassword', function() {
     AutomationHelpers.assert($('#user_password_confirmation').length == 1);
     AutomationHelpers.assert($('#settings_save').length == 1);
     
-    // Fill in the form
-    $('#current_password').val(params['old_password']);
-    $('#user_password').val(params['new_password']);
-    $('#user_password_confirmation').val(params['new_password']);
+    $(document).ready(function() {
+        function fillInfoAndClick() {
+            // Fill in the form
+            $('#current_password').val(params['old_password']);
+            $('#user_password').val(params['new_password']);
+            $('#user_password_confirmation').val(params['new_password']);
+            AutomationHelpers.simulateClick($('#settings_save').get());
     
-    AutomationHelpers.simulateClick('#settings_save');
+            AutomationHelpers.addTaskToQueue('verifyPasswordChange');
+        }
+        // Add a timeout, so that we overwrite the fields *after* the FF password manager.
+        setTimeout(fillInfoAndClick,2000);
+    });
+});
+
+AutomationHelpers.registerWorker('verifyPasswordChange', function() {
+    if (window.location == 'https://twitter.com/settings/passwords/password_reset_confirmation') {
+        alert('Confirmed successful password change!');
+        AutomationHelpers.raiseEvent('success',{});
+    }
 });
