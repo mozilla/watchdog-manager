@@ -103,10 +103,6 @@ function setupUI() {
         // Site to change password on
         var site = passwordTable.fnGetData($(thisParentTR).find('.table-site').get()[0]);
         
-        // TODO: replace prompt with something that requires you to confirm a password, with a real password input,
-        // and has an option for password generation.
-        var newPassword = prompt('Enter your new password.');
-                
         // Update table column 6 (automation button/status) with a spinner.
         passwordTable.fnUpdate('waiting',thisParentTR,6);
 
@@ -114,12 +110,18 @@ function setupUI() {
             site,
             {
                 username: username,
-                old_password: currentPassword,
-                new_password: newPassword
-            },function() {
-                passwordTable.fnUpdate('success',thisParentTR,6);
-            },function() {
-                passwordTable.fnUpdate('failure',thisParentTR,6);
+                old_password: currentPassword
+            },
+            {
+                success: function() {
+                    passwordTable.fnUpdate('success',thisParentTR,6);
+                },
+                failure: function() {
+                    passwordTable.fnUpdate('failure',thisParentTR,6);
+                },
+                cancel: function() {
+                    passwordTable.fnUpdate('can_automate',thisParentTR,6);
+                },
             }
         );
     });

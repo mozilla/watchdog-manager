@@ -6,27 +6,23 @@ self.port.on('credentials', function(data) {
     unsafeWindow.addCredentials(data.credentials);
 });
 
-self.port.on('success', function(data) {
-    callbacks[data.callbackID].success();
-});
-
-self.port.on('failure', function(data) {
-    callbacks[data.callbackID].failure();
+['success', 'failure', 'cancel'].forEach(function(callbackType) {
+    self.port.on(callbackType, function(data) {
+        callbacks[data.callbackID][callbackType]();
+    });
 });
 
 unsafeWindow.getCredentials = function() {
     self.port.emit('get_credentials',{});
 };
 
-unsafeWindow.runAutomationWorker = function(worker,site,params,successCallback,failureCallback) {
+unsafeWindow.runAutomationWorker = function(worker, site, params, callbackMap) {
     self.port.emit('run_automation_worker', {
         worker: worker,
         site: site,
         params: params,
         callbackID: ++lastCallbackID
     });
-    callbacks[lastCallbackID] = {
-        'success': successCallback,
-        'failure': failureCallback
-    };
+
+    callbacks[lastCallbackID] = callbackMap;
 };
