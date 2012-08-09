@@ -27,4 +27,4 @@ function Password() {
 
 Password.prototype.toString = function() {
     return this.password;
-}
+};

@@ -1,3 +1,5 @@
+/*global Password: false */
+
 var passwordSection = $('#set-password');
 var passwordField = $('#password');
 
