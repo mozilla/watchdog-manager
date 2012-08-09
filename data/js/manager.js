@@ -1,3 +1,4 @@
+var STATUS_COLUMN = 6;
 var passwordTable;
 var count = 0;
 
@@ -83,7 +84,7 @@ function addCredentials(credentials) {
                 },
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
-                'aTargets': [6]
+                'aTargets': [STATUS_COLUMN]
             }
             
         ]
@@ -103,8 +104,8 @@ function setupUI() {
         // Site to change password on
         var site = passwordTable.fnGetData($(thisParentTR).find('.table-site').get()[0]);
         
-        // Update table column 6 (automation button/status) with a spinner.
-        passwordTable.fnUpdate('waiting',thisParentTR,6);
+        // Update table column STATUS_COLUMN (automation button/status) with a spinner.
+        passwordTable.fnUpdate('waiting',thisParentTR,STATUS_COLUMN);
 
         runAutomationWorker('changePassword',
             site,
@@ -114,13 +115,13 @@ function setupUI() {
             },
             {
                 success: function() {
-                    passwordTable.fnUpdate('success',thisParentTR,6);
+                    passwordTable.fnUpdate('success',thisParentTR,STATUS_COLUMN);
                 },
                 failure: function() {
-                    passwordTable.fnUpdate('failure',thisParentTR,6);
+                    passwordTable.fnUpdate('failure',thisParentTR,STATUS_COLUMN);
                 },
                 cancel: function() {
-                    passwordTable.fnUpdate('can_automate',thisParentTR,6);
+                    passwordTable.fnUpdate('can_automate',thisParentTR,STATUS_COLUMN);
                 },
             }
         );
