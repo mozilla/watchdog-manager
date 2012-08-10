@@ -6,7 +6,7 @@ self.port.on('credentials', function(data) {
     unsafeWindow.addCredentials(data.credentials);
 });
 
-['success', 'failure', 'cancel'].forEach(function(callbackType) {
+['success', 'error', 'cancel'].forEach(function(callbackType) {
     self.port.on(callbackType, function(data) {
         callbacks[data.callbackID][callbackType]();
     });

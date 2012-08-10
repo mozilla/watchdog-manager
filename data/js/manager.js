@@ -117,7 +117,7 @@ function setupUI() {
                 success: function() {
                     passwordTable.fnUpdate('success',thisParentTR,STATUS_COLUMN);
                 },
-                failure: function() {
+                error: function() {
                     passwordTable.fnUpdate('failure',thisParentTR,STATUS_COLUMN);
                 },
                 cancel: function() {
