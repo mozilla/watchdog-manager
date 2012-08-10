@@ -6,5 +6,9 @@
     "http://t.nm.io": {
         "url": "http://t.nm.io/password",
         "script": "treehouse.nm.io.js"
+    },
+    "https://twitter.com": {
+        "url": "https://twitter.com/settings/password",
+        "script": "www.twitter.com.js"
     }
 }
