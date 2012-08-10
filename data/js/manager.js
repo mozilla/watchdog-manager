@@ -46,6 +46,8 @@ function addCredentials(credentials) {
         $('#password-table tbody').append($(credentialHTML(credential)));
     });
     passwordTable = $('#password-table').dataTable({
+        // Display up to 100 logins on a single page
+        'iDisplayLength': 100,
         'aoColumnDefs': [
             // Render password as a visual hash
             {
