@@ -26,3 +26,12 @@ unsafeWindow.runAutomationWorker = function(worker, site, params, callbackMap) {
 
     callbacks[lastCallbackID] = callbackMap;
 };
+
+unsafeWindow.bulkChangePasswords = function(sites) {
+    sites.forEach(function(site) {
+        site.callbackID = ++lastCallbackID;
+        callbacks[lastCallbackID] = site.callbacks;
+    });
+
+    self.port.emit('bulk_change', sites);
+};
