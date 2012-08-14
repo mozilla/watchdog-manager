@@ -6,7 +6,7 @@ self.port.on('credentials', function(data) {
     unsafeWindow.addCredentials(data.credentials);
 });
 
-['success', 'failure', 'cancel'].forEach(function(callbackType) {
+['success', 'error', 'cancel'].forEach(function(callbackType) {
     self.port.on(callbackType, function(data) {
         callbacks[data.callbackID][callbackType]();
     });
@@ -25,4 +25,13 @@ unsafeWindow.runAutomationWorker = function(worker, site, params, callbackMap) {
     });
 
     callbacks[lastCallbackID] = callbackMap;
+};
+
+unsafeWindow.bulkChangePasswords = function(sites) {
+    sites.forEach(function(site) {
+        site.callbackID = ++lastCallbackID;
+        callbacks[lastCallbackID] = site.callbacks;
+    });
+
+    self.port.emit('bulk_change', sites);
 };

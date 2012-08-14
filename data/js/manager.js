@@ -1,3 +1,6 @@
+var HASH_COLUMN = 4;
+var AGE_COLUMN = 5;
+var STATUS_COLUMN = 7;
 var passwordTable;
 var count = 0;
 
@@ -31,7 +34,10 @@ function strengthHTML(strength) {
 }
 
 function credentialHTML(credential) {
-    return '<tr><td>' + (++count) + '</td><td class="table-site">' +
+    return '<tr><td>' +
+        (credential.can_automate ? '<input class="table-checkbox" type="checkbox" />' : '') +
+        '</td><td>' +
+        (++count) + '</td><td class="table-site">' +
         credential.site + '</td><td class="table-username">' +
         credential.username + '</td><td class="table-password">' +
         credential.password + '</td><td>' +
@@ -56,7 +62,7 @@ function addCredentials(credentials) {
                 },
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
-                'aTargets': [3]
+                'aTargets': [HASH_COLUMN]
             },
             // Render password age as a human-readable age string
             {
@@ -65,7 +71,7 @@ function addCredentials(credentials) {
                 },
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
-                'aTargets': [4]
+                'aTargets': [AGE_COLUMN]
             },
             // Render automate column as a button, if automation is available for the site.
             // Also includes logic for displaying automation result
@@ -85,46 +91,67 @@ function addCredentials(credentials) {
                 },
                 // Use actual data (before fnRender) to sort column
                 'bUseRendered': false,
-                'aTargets': [6]
+                'aTargets': [STATUS_COLUMN]
             }
             
         ]
     });
 }
 
+/**
+ * Returns an object with the following information for the account:
+ * - site (URL)
+ * - params (username, old_password)
+ * - callbacks (success, failure, cancel)
+ *
+ * NOTE side effect: turns on spinners for all selected rows
+ */
+function getAccountInfoFromElement(elt) {
+    var thisParentTR = $(elt).closest('tr').get()[0];
+
+    // Password for account
+    var currentPassword = passwordTable.fnGetData($(thisParentTR).find('.table-password').get()[0]);
+
+    // Username for account
+    var username = passwordTable.fnGetData($(thisParentTR).find('.table-username').get()[0]);
+
+    // Site to change password on
+    var site = passwordTable.fnGetData($(thisParentTR).find('.table-site').get()[0]);
+
+    // Update table column STATUS_COLUMN (automation button/status) with a spinner.
+    passwordTable.fnUpdate('waiting',thisParentTR,STATUS_COLUMN);
+
+    return {
+        site: site,
+        params: {
+            username: username,
+            old_password: currentPassword
+        },
+        callbacks: {
+            success: function() {
+                passwordTable.fnUpdate('success',thisParentTR,STATUS_COLUMN);
+            },
+            error: function() {
+                passwordTable.fnUpdate('failure',thisParentTR,STATUS_COLUMN);
+            },
+            cancel: function() {
+                passwordTable.fnUpdate('can_automate',thisParentTR,STATUS_COLUMN);
+            },
+        }
+    };
+}
+
 function setupUI() {
     $(document.body).on('click','.btnChangePassword',function() {
-        var thisParentTR = $(this).closest('tr').get()[0];
-        
-        // Password for account
-        var currentPassword = passwordTable.fnGetData($(thisParentTR).find('.table-password').get()[0]);
-        
-        // Username for account
-        var username = passwordTable.fnGetData($(thisParentTR).find('.table-username').get()[0]);
-        
-        // Site to change password on
-        var site = passwordTable.fnGetData($(thisParentTR).find('.table-site').get()[0]);
-        
-        // Update table column 6 (automation button/status) with a spinner.
-        passwordTable.fnUpdate('waiting',thisParentTR,6);
+        var account = getAccountInfoFromElement(this);
+        runAutomationWorker('changePassword', account.site, account.params, account.callbacks);
+    });
 
-        runAutomationWorker('changePassword',
-            site,
-            {
-                username: username,
-                old_password: currentPassword
-            },
-            {
-                success: function() {
-                    passwordTable.fnUpdate('success',thisParentTR,6);
-                },
-                failure: function() {
-                    passwordTable.fnUpdate('failure',thisParentTR,6);
-                },
-                cancel: function() {
-                    passwordTable.fnUpdate('can_automate',thisParentTR,6);
-                },
-            }
-        );
+    $('#bulk').click(function() {
+        var checked = $('input[class="table-checkbox"]:checked');
+        var accounts = checked.map(function(index, element) {
+            return getAccountInfoFromElement(element);
+        }).get();
+        bulkChangePasswords(accounts);
     });
 }
