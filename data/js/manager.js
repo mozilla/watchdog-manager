@@ -6,6 +6,7 @@ var count = 0;
 
 $(document).ready(function(){
     getCredentials();
+    getPasswordsScore();
     setupUI();
 });
 
@@ -98,6 +99,13 @@ function addCredentials(credentials) {
     });
 }
 
+function addPasswordsScore(score) {
+    var scoreTemplate = $('#passwords-score-template').html();
+    var html = _.template(scoreTemplate,score);
+    
+    $('#passwords-score').html(html);
+}
+
 /**
  * Returns an object with the following information for the account:
  * - site (URL)
@@ -154,4 +162,9 @@ function setupUI() {
         }).get();
         bulkChangePasswords(accounts);
     });
+    
+    $(document.body).on('click','#explain-password-score',function() {
+        showPasswordsScorePanel();
+        return false;
+    })
 }

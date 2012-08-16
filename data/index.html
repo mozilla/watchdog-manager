@@ -13,9 +13,24 @@
         .failure {
             color:red;
         }
+        
+        #passwords-score {
+            float:right;
+        }
+        
+        .password-score-numbers {
+            font-size:36pt;
+        }
+        
+        .tiny-link {
+            font-size:90%;
+        }
         </style>
+        
+		<link href="css/manager.css" media="screen" rel="stylesheet" type="text/css" />
 		
 		<script src="lib/jquery.js" type="text/javascript"></script>
+        <script src="lib/underscore.js" type="text/javascript"></script>
 		<script src="lib/datatables/dataTables.js" type="text/javascript"></script>
 		<script src="lib/visualhashing_util.js" type="text/javascript"></script>
 		<script src="js/age.js" type="text/javascript"></script>
@@ -24,6 +39,7 @@
     <body>
         <h1>Watchdog Manager</h1>
         <p><input type="button" id="bulk" value="Change all selected passwords" /></p>
+        <div id="passwords-score">Score goes here!</div>
         <table id="password-table">
             <thead>
                 <tr>
@@ -40,5 +56,30 @@
             <tbody>
             </tbody>
         </table>
+        
+        <script type="text/template" id="passwords-score-template">
+        Password score:
+        <span class="password-score-numbers">
+        
+        <% 
+        function outputScore(score) {
+            if (score > 6) {
+                %>
+                <span class="good-score"><%= score %></span>
+            <%
+            } else if (score > 3) {%>
+                <span class="okay-score"><%= score %></span>
+            <% } else { %>
+                <span class="bad-score"><%= score %></span>
+            <% }
+        }
+        
+        var totalScore = scores.strength + scores.reuse + scores.age + scores.master; 
+        outputScore(totalScore); %>
+        <span class="neutral-slash">/</span> 10
+        </span>
+        
+        <a href="#" class="tiny-link" id="explain-password-score">(why?)</a>
+        </script>
     </body>
 </html>

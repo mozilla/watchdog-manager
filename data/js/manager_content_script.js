@@ -24,6 +24,10 @@ unsafeWindow.getPasswordsScore = function() {
     self.port.emit('get_passwords_score', {});
 };
 
+unsafeWindow.showPasswordsScorePanel = function() {
+    self.port.emit('show_passwords_score', {});
+};
+
 unsafeWindow.runAutomationWorker = function(worker, site, params, callbackMap) {
     self.port.emit('run_automation_worker', {
         worker: worker,
